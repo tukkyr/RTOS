@@ -71,6 +71,9 @@ int main(void)
 			puts("\n");
 			dump(loadbuf, size);
 		}
+		else if (!strcmp(buf, "run")) {
+			elf_load(loadbuf); /* メモリ上に展開 */
+		}
 		else {
 			puts("unknown.\n");
 		}

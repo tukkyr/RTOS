@@ -61,7 +61,7 @@ void *memcpy(void *dst, const void *src, long len) {
 int memcmp(const void *b1, const void *b2, long len) {
 	const char *p1 = b1, *p2 = b2;
 	for (; len > 0; len--) {
-		if (*p1 == *p2) {
+		if (*p1 != *p2) {
 			return (*p1 > *p2) ? 1 : -1;
 		}
 		p1++;
