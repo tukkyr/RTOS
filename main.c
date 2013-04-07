@@ -1,78 +1,23 @@
 #include "defines.h"
 #include "serial.h"
-#include "xmodem.h"
 #include "lib.h"
-
-static int init(void)
-{
-	extern int erodata, data_start, edata, bss_start, ebss;
-	memcpy(&data_start, &erodata, (long)&edata - (long)&data_start);
-	memset(&bss_start, 0, (long)&ebss - (long)&bss_start);
-	serial_init(SERIAL_DEFAULT_DEVICE);
-}
-
-static int dump(char *buf, long size)
-{
-	long i;
-	if (size < 0) {
-		puts("no data.\n");
-		return -1;
-	}
-	for (i = 0; i < size; i++) {
-		putxval(buf[i], 2);
-		if ((i & 0xf) == 15) {
-			puts("\n");
-		}
-		else {
-			if ((i & 0xf) == 7) {
-				puts(" ");
-			}
-			puts(" ");
-		}
-	}
-	puts("\n");
-}
-
-static void wait(void)
-{
-	volatile long i;
-	for (i = 0; i < 300000; i++);
-}
 
 int main(void)
 {
-	static char buf[16];
-	static long size = -1;
-	static unsigned char *loadbuf = NULL;
-	extern int buffer_start;
+	static char buf[32];
 
-	init();
-
-	puts("kozos boot loader started.\n");
+	puts("Hello World!\n");
 
 	while (1) {
-		puts("kzload> ");
+		puts(">");
 		gets(buf);
 
-		if (!strcmp(buf, "load")) { /* XMODEM で FileのLoad */
-			loadbuf = (char *)(&buffer_start);
-			size = xmode_recv(loadbuf);
-			wait();
-			if (size < 0) {
-				puts("\nXMODEM receive error!\n");
-			}
-			else {
-				puts("\nXMODEM receive succeeded.\n");
-			}
-		}
-		else if (!strcmp(buf, "dump")) {
-			puts("size: ");
-			putxval(size, 0);
+		if (!strncmp(buf, "echo", 4)) {
+			puts(buf + 4);
 			puts("\n");
-			dump(loadbuf, size);
 		}
-		else if (!strcmp(buf, "run")) {
-			elf_load(loadbuf); /* メモリ上に展開 */
+		else if (!strcmp(buf, "exit")) {
+			break;
 		}
 		else {
 			puts("unknown.\n");
@@ -81,4 +26,3 @@ int main(void)
 
 	return 0;
 }
-

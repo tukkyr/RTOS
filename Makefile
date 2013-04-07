@@ -19,17 +19,17 @@ H8WRITE = ~/source/h8_tools/h8write
 # Linux:/dev/ttySx, Linux(USB):/dev/ttyUSBx, Windows:comX
 H8WRITE_SERDEV = /dev/ttyUSB0
 
-OBJS  = vector.o startup.o main.o
-OBJS += lib.o serial.o xmodem.o elf.o
+OBJS  = startup.o main.o
+OBJS += lib.o serial.o
 
-TARGET = kzload
+TARGET = kzos
 
 CFLAGS = -Wall -mh -nostdinc -nostdlib -fno-builtin
 #CFLAGS += -mint32 # intを32ビットにすると掛算／割算ができなくなる
 CFLAGS += -I.
 #CFLAGS += -g
 CFLAGS += -Os
-CFLAGS += -DKZLOAD
+CFLAGS += -DKOZOS
 
 LFLAGS = -static -T ld.scr -L.
 
@@ -49,13 +49,5 @@ $(TARGET) :	$(OBJS)
 .s.o :		$<
 		$(CC) -c $(CFLAGS) $<
 
-$(TARGET).mot :	$(TARGET)
-		$(OBJCOPY) -O srec $(TARGET) $(TARGET).mot
-
-image :		$(TARGET).mot
-
-write :		$(TARGET).mot
-		$(H8WRITE) -3069 -f16 $(TARGET).mot $(H8WRITE_SERDEV)
-
 clean :
-		rm -f $(OBJS) $(TARGET) $(TARGET).elf $(TARGET).mot
+		rm -f $(OBJS) $(TARGET) $(TARGET).elf
