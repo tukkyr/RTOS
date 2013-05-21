@@ -34,7 +34,7 @@ int main(void)
 	puts("kozos boot succeed!\n");
 
 	softvec_setintr(SOFTVEC_TYPE_SERINTR, intr);
-	serial_intr_is_recv_enable(SERIAL_DEFAULT_DEVICE);
+	serial_intr_recv_enable(SERIAL_DEFAULT_DEVICE);
 
 	puts("> ");
 
