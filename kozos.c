@@ -81,7 +81,7 @@ static void thread_end(void)
 static void thread_init(kz_thread *thp)
 {
 	thp->init.func(thp->init.argc, thp->init.argv);
-	thread_end();
+	puts("init end.\n");
 }
 
 static kz_thread_id_t thread_run(kz_func_t func, char *name, int stacksize, int argc, char *argv[])
